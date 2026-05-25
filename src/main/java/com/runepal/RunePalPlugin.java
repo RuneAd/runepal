@@ -6,14 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.QuestCompleted;
 import net.runelite.api.events.StatChanged;
+import net.runelite.api.events.VarbitChanged;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.util.ClientThread;
 
 @Slf4j
 @PluginDescriptor(
@@ -85,11 +85,12 @@ public class RunePalPlugin extends Plugin
 	}
 
 	@Subscribe
-	public void onQuestCompleted(QuestCompleted event)
+	public void onVarbitChanged(VarbitChanged event)
 	{
+		// Catches quest completions and other progression state changes
 		if (config.syncEnabled())
 		{
-			syncScheduler.scheduleImmediate();
+			syncScheduler.debounce();
 		}
 	}
 

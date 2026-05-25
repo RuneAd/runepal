@@ -1,10 +1,15 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
-    id 'checkstyle'
 }
 
-apply from: "https://raw.githubusercontent.com/runelite/plugin-hub/master/build.gradle"
+group = 'com.runepal'
+version = '1.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
 
 repositories {
     mavenLocal()
@@ -18,11 +23,18 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
-group = 'com.runepal'
-version = '1.0'
-sourceCompatibility = '11'
-targetCompatibility = '11'
-
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Plugin-Version': version,
+            'Plugin-Id': 'runepal',
+            'Plugin-Provider': 'RuneAd',
+            'Plugin-Description': 'Syncs your OSRS profile to RunePal.com',
+            'Plugin-License': 'BSD 2-Clause'
+        )
+    }
 }
