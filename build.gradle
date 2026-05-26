@@ -22,9 +22,18 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     testImplementation 'junit:junit:4.13.2'
-    testCompileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
+    testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+}
+
+tasks.register('run', JavaExec) {
+    dependsOn testClasses
+    def cp = configurations.testRuntimeClasspath.resolvedConfiguration.lenientConfiguration.artifacts.collect { it.file }
+    classpath = sourceSets.main.output + sourceSets.test.output + files(cp)
+    mainClass = 'com.runepal.RunePalPluginLauncher'
+    args '--developer-mode', '--debug'
+    jvmArgs '-ea'
 }
 
 tasks.withType(JavaCompile) {
